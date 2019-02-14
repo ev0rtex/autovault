@@ -31,7 +31,7 @@ eval "$(autovault env)"
 
 # Advanced Usage
 
-In my own shell I have added a few things to make thing work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
+In my own shell I have added a few things to make it work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
 
 ```sh
 #
