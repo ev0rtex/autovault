@@ -16,7 +16,7 @@ asc() { echo -en "\x${1}" }
 enc() {
     local key=${1} data= out=; read data
     for (( i=0; i<${#data}; i++ )); do
-        out+=$(hex $(( $(ord ${data:$i:1}) ^ $(ord ${key:$(( i % ${#key})):1}) )))
+        out+=$(hex $(( $(ord ${data:$i:1}) ^ $(ord ${key:$(( i % ${#key} )):1}) )))
     done
     echo -n "${out}"
 }
@@ -44,9 +44,9 @@ ask() {
         if [[ -n "${match[3]}" ]]; then
             if [[ "${match[3]}" == "new" ]]; then
                 while true; do
-                    echo -n "New password: "         > /dev/tty
-                    read -s pw                       < /dev/tty
-                    echo                             > /dev/tty
+                    echo -n "New password: "           > /dev/tty
+                    read -s pw                         < /dev/tty
+                    echo                               > /dev/tty
                     echo -n "New password (confirm): " > /dev/tty
                     if [[ "$(read -s pw_check < /dev/tty; echo -n "${pw_check}")" == "${pw}" ]]; then
                         echo -n "${pw}" | enc ${pwkey} > ${pwtmp}
@@ -58,7 +58,18 @@ ask() {
                     fi
                 done
             elif [[ "${match[3]}" == "confirm" ]]; then
-                cat ${pwtmp} | dec ${pwkey}; rm ${pwtmp}
+                local pw="$(cat ${pwtmp} | dec ${pwkey})"
+                rm ${pwtmp}
+                echo -n "${pw}"
+
+                # Save an entry in 1password
+                local item_pass="$(1pass -p "cli:vaulted:${vault}" password)"
+                local opsession="$(gpg -qdr ${$(grep self_key ${HOME}/.1pass/config)##*=} ~/.1pass/cache/_session.gpg)"
+                if [[ -z "${item_pass}" ]]; then
+                    echo "Creating an entry named 'cli:vaulted:${vault}' in 1Password. Be sure to update it with MFA if needed" > /dev/tty
+                    echo "${opsession}" | op create item Password "$(echo '{"password":"test"}' | op encode)" --title="cli:vaulted:${vault}" 2>&1 > /dev/null
+                    echo -en "Refreshing 1pass cache..." > /dev/tty; 1pass -r > /dev/null; echo "done" > /dev/tty
+                fi
             fi
         fi
 

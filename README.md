@@ -29,6 +29,12 @@ In your shell rc file (`~/.zshrc`, `~/.bashrc`, etc.) you'll want to make sure y
 eval "$(autovault env)"
 ```
 
+### Creating a new vault
+
+When you create a new vault using `vaulted` this script will be called as long as `VAULTED_ASKPASS` in configured in your environment. When you enter a password for the vault, this script will attempt to create a 1Password entry named `cli:vaulted:{vault_name}` that contains the password you used.
+
+_NOTE:_ If you are using AWS credentials you will need to update the 1Password entry with a TOTP field that contains your MFA secret. You can copy this from an existing 1Password entry for your AWS account.
+
 ## Advanced Usage
 
 In my own shell I have added a few things to make it work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
