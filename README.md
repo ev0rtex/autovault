@@ -28,3 +28,59 @@ In your shell rc file (`~/.zshrc`, `~/.bashrc`, etc.) you'll want to make sure y
 ```sh
 eval "$(autovault env)"
 ```
+
+# Advanced Usage
+
+In my own shell I have added a few things to make thing work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
+
+```sh
+#
+# Check to ensure the 'op' session that 1pass saves can be decrypted by the GPG agent
+#    - This ensures that the GPG agent loads the key _before_ 'vaulted' gets called and usurps STDIO
+check_session() {
+    local op_dir="${HOME}/.1pass"
+    if [[ ! -d "${op_dir}" ]]; then
+        echo "ERROR: 1pass doesn't appear to be installed"
+        return 1
+    fi
+    if [[ -f "${op_dir}/config" ]] && [[ -f "${op_dir}/cache/_session.gpg" ]]; then
+        gpg -qdr ${$(grep self_key ${op_dir}/config)##*=} ${op_dir}/cache/_session.gpg > /dev/null
+    else
+        echo "ERROR: 1pass doesn't appear to be configured/initialized yet"
+        return 1
+    fi
+}
+
+#
+# Wrap the vaulted binary
+vaulted() {
+    if which vaulted > /dev/null; then
+        check_session
+        command vaulted ${@}
+    else
+        echo "ERROR: Vaulted doesn't appear to be installed"
+        return 1
+    fi
+}
+```
+
+...and if you use [Rapture](https://github.com/daveadams/go-rapture) you can wrap that as well:
+
+```sh
+#
+# Wrap the rapture binary
+rapture() {
+    if [[ -n "${GOPATH}" ]] && [[ -x "${GOPATH}/bin/rapture" ]]; then
+        export _rapture_session_id \
+            _rapture_session_key \
+            _rapture_session_salt \
+            _rapture_wrap=true
+
+        check_session
+        eval "$(${GOPATH}/bin/rapture ${@})"
+    else
+        echo "ERROR: Rapture doesn't appear to be installed"
+        return 1
+    fi
+}
+```
