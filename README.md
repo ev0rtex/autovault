@@ -37,7 +37,7 @@ _NOTE:_ Copy the 40-character public key ID from the GPG setup for use with 1pas
 Set up `1pass`:
 
 ```sh
-mkdir -p ~/.local/bin && echo "export PATH=${HOME}/.local/bin:${PATH}" > ~/.${ZSH_NAME:-bash}rc
+mkdir -p ~/.local/bin && echo "export PATH=${HOME}/.local/bin:${PATH}" >> ~/.${ZSH_NAME:-bash}rc
 curl -sSLo ~/.local/bin/1pass https://raw.githubusercontent.com/dcreemer/1pass/master/1pass
 chmod +x ~/.local/bin/1pass
 1pass -rv
