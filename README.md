@@ -31,7 +31,25 @@ eval "$(autovault env)"
 
 ## Advanced Usage
 
-In my own shell I have added a few things to make it work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
+### GPG agent cache TTL
+
+The default cache TTLs for the GPG agent may be too long or too short for your liking. Decide what you consider a reasonable cache time (I do a default of 2 hours w/an 8 hour max) before you have to enter your GPG password again:
+
+**~/.gnupg/gpg-agent.conf**
+```
+default-cache-ttl 7200
+max-cache-ttl 28800
+```
+
+You may have to kill the gpg-agent if it's already running to get the new config:
+
+```sh
+killall gpg-agent
+```
+
+### Wrapping vaulted and rapture
+
+In my own shell configuration I have added a few things to make it work more smoothly. Notably I try to do a simple sanity check and make sure that the `gpg-agent` is loaded because `1pass` will need to work with your encrypted `1password` data:
 
 ```sh
 #
