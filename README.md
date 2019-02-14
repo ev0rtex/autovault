@@ -42,7 +42,7 @@ curl -sSLo ~/.local/bin/1pass https://raw.githubusercontent.com/dcreemer/1pass/m
 chmod +x ~/.local/bin/1pass
 1pass -rv
 vim ~/.1pass/config
-    # self_key=<4-char GPG key ID from above>
+    # self_key=<40-char GPG key ID from above>
     # email=<your email>
     # subdomain=<your 1Password subdomain>
 echo "<1Password master password>" | gpg -er <GPG ID or email> > ~/.1pass/_master.gpg
