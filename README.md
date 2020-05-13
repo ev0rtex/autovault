@@ -3,20 +3,25 @@ Autovault
 
 This is a relatively simple utility script that can be used for the `VAULTED_ASKPASS` environment variable accepted by [Vaulted](https://github.com/miquella/vaulted). The script is written as a ZSH script so you will need to at a minimum have ZSH installed on your system to use it (though the shell it's called from shouldn't matter much).
 
-_NOTE:_ Currently this only works with 1password accounts (though I have some ideas for making it more backend-agnostic).
+_NOTE:_ Currently this works with 1password and gopass backends
 
 ## Dependencies
 
 There are a few things needed for this to work:
   * ZSH installed (on most systems this is already the case)
-  * A 1password account (obviously)
-  * [1password-cli](https://support.1password.com/command-line-getting-started/)
-  * [1pass](https://github.com/dcreemer/1pass) (make sure you follow the instructions to set this up correctly)
+  * For 1password backend:
+      * A 1password account (obviously)
+      * [1password-cli](https://support.1password.com/command-line-getting-started/)
+      * [1pass](https://github.com/dcreemer/1pass) (make sure you follow the instructions to set this up correctly)
+  * For gopass backend:
+      * [gopass](https://github.com/gopasspw/gopass)
   * [vaulted](https://github.com/miquella/vaulted)
 
 ## Quickstart
 
 For a quickstart (yeah, sorry...not super duper simple currently) get deps installed/configured:
+
+### For 1password
 
 ```sh
 brew cask install 1password-cli
@@ -34,8 +39,6 @@ gpg --full-gen-key
 
 _NOTE:_ Copy the 40-character public key ID from the GPG setup for use with 1pass.
 
-Set up `1pass`:
-
 ```sh
 mkdir -p ~/.local/bin && echo "export PATH=${HOME}/.local/bin:${PATH}" >> ~/.${ZSH_NAME:-bash}rc
 curl -sSLo ~/.local/bin/1pass https://raw.githubusercontent.com/dcreemer/1pass/master/1pass
@@ -48,6 +51,23 @@ vim ~/.1pass/config
 echo "<1Password master password>" | gpg -er <GPG ID or email> > ~/.1pass/_master.gpg
 echo "<1Password secret key>" | gpg -er <GPG ID or email> > ~/.1pass/_secret.gpg
 1pass -rv
+```
+
+### For gopass
+
+It might actually be worthwhile to just follow the [official setup guide](https://github.com/gopasspw/gopass/blob/master/docs/setup.md). If you want a quick rundown this should at least get it installed:
+
+```sh
+brew install jq gnupg zsh gopass
+gpg --full-gen-key
+    # Type of key:   1
+    # Keysize:       2048
+    # Valid for:     0
+    # Real name:     <your name>
+    # Email address: <your email>
+    # Comment:       <blank>
+    # ...(O)kay...?  o
+    # Passphrase:    <passphrase>
 ```
 
 ## Usage
