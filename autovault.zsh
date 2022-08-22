@@ -78,7 +78,7 @@ backend_gopass() {
     case "${1}" in
         fetch )
             [[ "${entry}" == "password" ]] && echo $(gopass show -f -o "${BACKEND_PREFIX}${vault}" 2>/dev/null)                 && return 0
-            [[ "${entry}" == "otp" ]]      && echo $(gopass otp        "${BACKEND_PREFIX}${vault}" 2>/dev/null | cut -f1 -d' ') && return 0
+            [[ "${entry}" == "otp" ]]      && echo $(gopass otp     -o "${BACKEND_PREFIX}${vault}" 2>/dev/null | cut -f1 -d' ') && return 0
             ;;
         write )
             # Write a password
