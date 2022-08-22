@@ -9,7 +9,7 @@ BACKEND="${AUTOVAULT_BACKEND:-1pass}"
 BACKEND_PREFIX="${AUTOVAULT_BACKEND_PREFIX}"
 case "${BACKEND}" in
     1pass  ) BACKEND_PREFIX="${BACKEND_PREFIX:-cli:vaulted:}" ;;
-    gopass ) BACKEND_PREFIX="${BACKEND_PREFIX:-${GOPASS_MOUNT:-inst/}cli/vaulted/}" ;;
+    gopass ) BACKEND_PREFIX="${BACKEND_PREFIX:-${GOPASS_MOUNT:-personal/}cli/vaulted/}" ;;
 esac
 
 
